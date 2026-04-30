@@ -109,7 +109,6 @@ var resultText = document.getElementById('result-text');
 var restartButton = document.getElementById('restart-btn');
 var quizTitle = document.getElementById('quiz-title');
 
-// Elementos del registro de puntuaciones
 var scoreboardContainer = document.getElementById('scoreboard-container');
 var scoresList = document.getElementById('scores-list');
 var viewScoresBtn = document.getElementById('view-scores-btn');
@@ -126,36 +125,31 @@ var score = 0;
 var errors = 0; 
 var totalQuestions = 0; 
 var scoreHistory = {}; 
+var errorDetails = []; // Cesta para las palabras falladas
 
 // ==========================================
-// 5. LÓGICA DE GENERACIÓN (NUEVA LÓGICA DE DISTRACTORES)
+// 5. LÓGICA DE GENERACIÓN
 // ==========================================
 function generateQuiz() {
     let shuffledVocab = shuffleArray(vocabData);
     let totalItems = shuffledVocab.length;
     
-    // Calcular cuántas preguntas serán de Español a Inglés (70%)
+    // 70% Español a Inglés
     let esToEnCount = Math.floor(totalItems * 0.7);
-    
     let generatedQuestions = [];
 
     shuffledVocab.forEach((item, index) => {
         let isEsToEn = index < esToEnCount;
-        
         let questionWord = isEsToEn ? item.es : item.en;
         let correctWord = isEsToEn ? item.en : item.es;
         
-        // 1. Buscar opciones falsas de la MISMA categoría
         let sameCategoryDistractors = vocabData.filter(v => v !== item && v.cat === item.cat);
         let finalDistractors = [];
         
-        // Si hay 2 o más en la misma categoría, los usamos
         if (sameCategoryDistractors.length >= 2) {
             finalDistractors = shuffleArray(sameCategoryDistractors).slice(0, 2);
         } else {
-            // Si no hay suficientes (ej: Página 3 solo tiene 1 palabra), cogemos los que haya
             finalDistractors = [...sameCategoryDistractors];
-            // Y rellenamos con palabras de otras categorías aleatorias
             let otherCategoryDistractors = vocabData.filter(v => v !== item && v.cat !== item.cat);
             let shuffledOthers = shuffleArray(otherCategoryDistractors);
             while (finalDistractors.length < 2) {
@@ -178,7 +172,6 @@ function generateQuiz() {
         });
     });
 
-    // Barajar para mezclar las direcciones de traducción
     return shuffleArray(generatedQuestions);
 }
 
@@ -204,6 +197,7 @@ function startGame() {
 
     score = 0;
     errors = 0;
+    errorDetails = []; 
     scoreHistory = {};
     updateStats(); 
     
@@ -282,6 +276,10 @@ function selectAnswer(e) {
         scoreHistory[currentQuestionIndex] = 0;
         if (firstAttempt) { 
             errors++;
+            
+            // Capturar el error exacto
+            let correctAnswerText = currentQuestion.answers.find(a => a.correct === true).text;
+            errorDetails.push(currentQuestion.question + " (era: " + correctAnswerText + ")");
         }
     }
     recalculateScore(); 
@@ -377,45 +375,40 @@ function showMainMenu() {
 }
 
 // ==========================================
-// 7. LÓGICA DE REGISTRO DE PUNTUACIONES (LOCAL Y NUBE)
+// 7. LÓGICA DE REGISTRO DE PUNTUACIONES
 // ==========================================
 function saveScoreToHistory(grade) {
-    // 1. GUARDADO LOCAL (Para verlo en el botón "Ver Puntuaciones" del juego)
     var history = JSON.parse(localStorage.getItem('englishQuizScores')) || {};
-    
-    if (!history[playerName]) {
-        history[playerName] = [];
-    }
-    
+    if (!history[playerName]) { history[playerName] = []; }
     var fechaActual = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    var errorString = errorDetails.length > 0 ? errorDetails.join(', ') : 'Ninguno';
     
     history[playerName].push({
         score: score,
         total: totalQuestions,
         errors: errors,
+        errorList: errorString, 
         grade: grade,
         date: fechaActual
     });
-    
     localStorage.setItem('englishQuizScores', JSON.stringify(history));
 
-    // 2. GUARDADO EN LA NUBE (Google Sheets)
-    var scriptURL = 'https://script.google.com/macros/s/AKfycbzefYyGPqZq1gPLc5vA_-ZrX7YCpMBURPRK5O06ocO110exfL-hqvga9dHzECrcU3mYJw/exec'; 
+    // GUARDADO EN LA NUBE (Google Sheets)
+    var scriptURL = 'https://script.google.com/macros/s/AKfycbwk-hLFeqDNjVv-hUBAYn_gAV7uwDMP6ETxl2ar_KVIqjOxKv3BT86TlcNm7Tp5NozxnA/exec'; 
     
     var data = {
         nombre: playerName,
         nota: grade,
         errores: errors,
-        fecha: fechaActual
+        fecha: fechaActual,
+        errores_detalle: errorString 
     };
 
-    // Enviamos los datos silenciosamente
     fetch(scriptURL, {
         method: 'POST',
-        mode: 'no-cors', // <-- LÍNEA AÑADIDA PARA EVITAR BLOQUEO DEL NAVEGADOR
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8', 
-        },
+        mode: 'no-cors', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
     })
     .then(response => console.log('Petición enviada a Google Sheets.'))
@@ -441,10 +434,11 @@ function showScoreboard() {
         partidas.forEach(function(partida, index) {
             var entryDiv = document.createElement('div');
             entryDiv.classList.add('score-entry');
-            
             var numPartida = index + 1;
+            
             entryDiv.innerHTML = '<span class="score-name">' + player + ' (Partida ' + numPartida + ')</span><br>' +
-                                 '<span class="score-detail">Nota: <strong>' + partida.grade + '/10</strong> | Errores: ' + partida.errors + ' | Fecha: ' + partida.date + '</span>';
+                                 '<span class="score-detail">Nota: <strong>' + partida.grade + '/10</strong> | Errores totales: ' + partida.errors + ' | Fecha: ' + partida.date + '</span><br>' +
+                                 '<span class="score-detail" style="color: var(--color-incorrecto); font-size: 0.9em; display:block; margin-top: 5px;"><strong>Fallos:</strong> ' + (partida.errorList || 'Ninguno') + '</span>';
             
             scoresList.appendChild(entryDiv);
         });
@@ -455,23 +449,16 @@ function showScoreboard() {
 // 8. EVENT LISTENERS
 // ==========================================
 startBtn.addEventListener('click', startGame);
-
-playerNameInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        startGame();
-    }
-});
-
+playerNameInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') startGame(); });
 nextButton.addEventListener('click', showNextQuestion);
 prevButton.addEventListener('click', showPrevQuestion);
 menuButton.addEventListener('click', showMainMenu); 
 restartButton.addEventListener('click', showMainMenu); 
-
 viewScoresBtn.addEventListener('click', showScoreboard);
 closeScoresBtn.addEventListener('click', showMainMenu);
 
 clearScoresBtn.addEventListener('click', function() {
-    if (confirm('¿Estás seguro de que quieres borrar TODAS las puntuaciones registradas? Esta acción no se puede deshacer. (Nota: Esto no borra las puntuaciones de tu Google Sheets).')) {
+    if (confirm('¿Estás seguro de que quieres borrar TODAS las puntuaciones registradas en este ordenador?')) {
         localStorage.removeItem('englishQuizScores');
         showScoreboard(); 
     }

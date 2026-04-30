@@ -395,7 +395,7 @@ function saveScoreToHistory(grade) {
     localStorage.setItem('englishQuizScores', JSON.stringify(history));
 
     // GUARDADO EN LA NUBE (Google Sheets)
-    var scriptURL = 'https://script.google.com/macros/s/AKfycbwk-hLFeqDNjVv-hUBAYn_gAV7uwDMP6ETxl2ar_KVIqjOxKv3BT86TlcNm7Tp5NozxnA/exec'; 
+    var scriptURL = 'https://script.google.com/macros/s/AKfycbzXP19HMnx8H2LAqZ-yA8JkrRV0aMZEr4BccBCScuVOFHmIc61oJthUK-2MNYhDn2Rv4w/exec'; 
     
     var data = {
         nombre: playerName,

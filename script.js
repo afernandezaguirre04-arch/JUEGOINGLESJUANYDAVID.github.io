@@ -277,9 +277,10 @@ function selectAnswer(e) {
         if (firstAttempt) { 
             errors++;
             
-            // Capturar el error exacto
+            // --- ACTUALIZADO: CAPTURAR EL ERROR SÚPER DETALLADO ---
             let correctAnswerText = currentQuestion.answers.find(a => a.correct === true).text;
-            errorDetails.push(currentQuestion.question + " (era: " + correctAnswerText + ")");
+            // Lo guardamos en formato: Pregunta (respondió: X, era: Y)
+            errorDetails.push(currentQuestion.question + " (respondió: " + selectedText + ", era: " + correctAnswerText + ")");
         }
     }
     recalculateScore(); 
@@ -382,6 +383,7 @@ function saveScoreToHistory(grade) {
     if (!history[playerName]) { history[playerName] = []; }
     var fechaActual = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
     
+    // Convertimos la cesta de errores detallados en texto para Sheets
     var errorString = errorDetails.length > 0 ? errorDetails.join(', ') : 'Ninguno';
     
     history[playerName].push({
@@ -395,7 +397,7 @@ function saveScoreToHistory(grade) {
     localStorage.setItem('englishQuizScores', JSON.stringify(history));
 
     // GUARDADO EN LA NUBE (Google Sheets)
-    var scriptURL = 'https://script.google.com/macros/s/AKfycbzXP19HMnx8H2LAqZ-yA8JkrRV0aMZEr4BccBCScuVOFHmIc61oJthUK-2MNYhDn2Rv4w/exec'; 
+    var scriptURL = 'https://script.google.com/macros/s/AKfycbwk-hLFeqDNjVv-hUBAYn_gAV7uwDMP6ETxl2ar_KVIqjOxKv3BT86TlcNm7Tp5NozxnA/exec'; 
     
     var data = {
         nombre: playerName,
@@ -411,7 +413,7 @@ function saveScoreToHistory(grade) {
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
     })
-    .then(response => console.log('Petición enviada a Google Sheets.'))
+    .then(response => console.log('Petición enviada a Google Sheets con detalle completo.'))
     .catch(error => console.error('Error al enviar a Sheets:', error));
 }
 

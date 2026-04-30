@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Vocabulary Quiz</title>
+    
+    <!-- FUENTES GOOGLE (Old Standard TT) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- ENLACE AL ARCHIVO CSS (Asegúrate de que 'style.css' está en la misma carpeta) -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ============================================== -->
+    <!-- 1. MENÚ PRINCIPAL (PANTALLA DE INICIO)         -->
+    <!-- ============================================== -->
+    <div id="main-menu" class="container">
+        <h2 id="main-title">English Vocabulary Quiz</h2>
+        <p id="subtitle">Pon a prueba tu vocabulario</p>
+        <p id="author">por: Adrián Fernández Aguirre</p>
+        
+        <h3 id="topic-header">Introduce tu nombre para empezar</h3>
+        
+        <input type="text" id="player-name" placeholder="Tu nombre aquí..." autocomplete="off">
+        <button id="start-game-btn" class="topic-btn" style="background-color: var(--color-primario); color: white;">Iniciar Juego</button>
+        <button id="view-scores-btn" class="topic-btn" style="background-color: #6c757d; color: white; margin-top: 15px;">Ver Puntuaciones</button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 2. PANTALLA PRINCIPAL DEL JUEGO (EL QUIZ)      -->
+    <!-- ============================================== -->
+    <div class="container hide" id="quiz-main">
+        <div id="quiz-header">
+            <h2 id="quiz-title">Vocabulario</h2> 
+        </div>
+        
+        <!-- Contenedor de la Pregunta -->
+        <div id="question-container">
+            <p id="category-text">Categoría</p>
+            <p id="question-text">Aquí va la pregunta...</p>
+        </div>
+        
+        <!-- Barra de Estadísticas en Vivo -->
+        <div class="stats-bar hide">
+            <h3 id="score-text">Puntuación: 0 / 0</h3>
+            <h3 id="errors-text">Errores: 0</h3>
+        </div>
+        
+        <!-- Cuadrícula de Respuestas (Generada desde JS) -->
+        <div id="answer-buttons" class="btn-grid">
+            <!-- Los botones <button> se inyectan aquí -->
+        </div>
+
+        <!-- Controles de Navegación del Quiz -->
+        <div class="quiz-footer hide">
+            <div class="controls">
+                <button id="prev-btn" class="nav-btn btn invisible">Anterior</button>
+                <button id="menu-btn" class="nav-btn menu-btn btn">Menú</button>
+                <button id="next-btn" class="nav-btn btn invisible">Siguiente</button>
+            </div>
+        </div>
+        
+        <!-- Pantalla Final (al terminar todas las preguntas) -->
+        <div id="end-game-controls" class="hide">
+             <div id="result-text"></div>
+             <button id="restart-btn" class="nav-btn menu-btn btn">Volver al Menú</button>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 3. PANTALLA DE REGISTRO DE PUNTUACIONES        -->
+    <!-- ============================================== -->
+    <div id="scoreboard-container" class="container hide">
+        <h2 style="color: var(--color-primario); margin-bottom: 20px; font-weight: bold;">Registro de Puntuaciones</h2>
+        
+        <div id="scores-list">
+            <!-- Las puntuaciones guardadas aparecerán aquí -->
+        </div>
+        
+        <button id="close-scores-btn" class="nav-btn menu-btn btn" style="margin-top: 20px; width: 100%;">Volver al Menú</button>
+        <button id="clear-scores-btn" class="nav-btn btn" style="background-color: var(--color-incorrecto); margin-top: 10px; width: 100%;">Borrar Historial</button>
+    </div>
+
+    <!-- ENLACE AL ARCHIVO JS (Asegúrate de que 'script.js' está en la misma carpeta) -->
+    <script src="script.js"></script>
+</body>
+</html>

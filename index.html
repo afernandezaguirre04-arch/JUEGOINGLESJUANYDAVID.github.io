@@ -38,14 +38,23 @@
 
     <div id="grammar-menu" class="container hide">
         <h2 style="color: var(--color-africa-naranja); margin-bottom: 20px;">Bloques de Gramática</h2>
-        <button class="topic-btn block-btn" data-block="1" style="padding: 15px; font-size: 1.1em;">Bloque 1: Future Simple</button>
-        <button class="topic-btn block-btn" data-block="2" style="padding: 15px; font-size: 1.1em;">Bloque 2: Conditional Simple</button>
-        <button class="topic-btn block-btn" data-block="3" style="padding: 15px; font-size: 1.1em;">Bloque 3: First Conditional</button>
-        <button class="topic-btn block-btn" data-block="4" style="padding: 15px; font-size: 1.1em;">Bloque 4: Be going to</button>
-        <button class="topic-btn block-btn" data-block="5" style="padding: 15px; font-size: 1.1em;">Bloque 5: There is / There are</button>
-        <button class="topic-btn block-btn" data-block="6" style="padding: 15px; font-size: 1.1em;">Bloque 6: Will vs Be going to</button>
-        <button class="topic-btn block-btn" data-block="all" style="background-color: var(--color-primario); color: white;">Mezclar Todo</button>
-        <button class="nav-btn menu-btn btn go-back-mode" style="margin-top: 20px; width: 100%;">Volver Atrás</button>
+        <div style="max-height: 450px; overflow-y: auto; padding-right: 10px; margin-bottom: 15px;">
+            <button class="topic-btn block-btn" data-block="1" style="padding: 15px; font-size: 1.1em;">Bloque 1: Future Simple</button>
+            <button class="topic-btn block-btn" data-block="2" style="padding: 15px; font-size: 1.1em;">Bloque 2: Conditional Simple</button>
+            <button class="topic-btn block-btn" data-block="3" style="padding: 15px; font-size: 1.1em;">Bloque 3: First Conditional</button>
+            <button class="topic-btn block-btn" data-block="4" style="padding: 15px; font-size: 1.1em;">Bloque 4: Be going to</button>
+            <button class="topic-btn block-btn" data-block="5" style="padding: 15px; font-size: 1.1em;">Bloque 5: There is / There are</button>
+            <button class="topic-btn block-btn" data-block="6" style="padding: 15px; font-size: 1.1em;">Bloque 6: Will vs Be going to</button>
+            
+            <button class="topic-btn block-btn" data-block="7" style="padding: 15px; font-size: 1.1em;">Bloque 7: Present Simple vs. Cont.</button>
+            <button class="topic-btn block-btn" data-block="8" style="padding: 15px; font-size: 1.1em;">Bloque 8: Past Simple</button>
+            <button class="topic-btn block-btn" data-block="9" style="padding: 15px; font-size: 1.1em;">Bloque 9: Comparatives & Superlatives</button>
+            <button class="topic-btn block-btn" data-block="10" style="padding: 15px; font-size: 1.1em;">Bloque 10: Modal Verbs</button>
+            <button class="topic-btn block-btn" data-block="11" style="padding: 15px; font-size: 1.1em;">Bloque 11: Haz de Profesor (Errores)</button>
+            
+            <button class="topic-btn block-btn" data-block="all" style="background-color: var(--color-texto); color: white; padding: 15px; font-size: 1.1em;">Desafío Final: Mezclar Todo</button>
+        </div>
+        <button class="nav-btn menu-btn btn go-back-mode" style="margin-top: 10px; width: 100%;">Volver Atrás</button>
     </div>
 
     <div class="container hide" id="quiz-main">
@@ -63,8 +72,7 @@
             <h3 id="errors-text">Errores: 0</h3>
         </div>
         
-        <div id="answer-buttons" class="btn-grid">
-            </div>
+        <div id="answer-buttons" class="btn-grid"></div>
 
         <div id="input-zone" class="hide" style="text-align: center; margin-top: 20px;">
             <input type="text" id="grammar-input" placeholder="Escribe tu respuesta aquí..." autocomplete="off">
@@ -91,16 +99,12 @@
 
     <div id="scoreboard-container" class="container hide">
         <h2 style="color: var(--color-primario); margin-bottom: 20px; font-weight: bold;">Registro de Puntuaciones</h2>
-        
-        <div id="scores-list">
-            </div>
-        
+        <div id="scores-list"></div>
         <button id="close-scores-btn" class="nav-btn menu-btn btn" style="margin-top: 20px; width: 100%;">Volver al Menú</button>
         <button id="clear-scores-btn" class="nav-btn btn" style="background-color: var(--color-incorrecto); margin-top: 10px; width: 100%;">Borrar Historial de este ordenador</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-
     <script src="script.js"></script>
 </body>
 </html>
